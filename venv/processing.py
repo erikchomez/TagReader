@@ -8,21 +8,19 @@ def process_image(image_str: str) -> 'image':
     image = imutils.resize(image, height=1000)
 
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    gray = cv2.GaussianBlur(gray, (5, 5), 0)
+    blurred = cv2.GaussianBlur(gray, (5, 5), 0)
 
-    # edged = cv2.Canny(gray, 85, 45)
-    edged = auto_canny(image)
+    edged = auto_canny(blurred)
 
-    cv2.imwrite('edged_image.jpg', edged)
-
-    contours, hierarchy = cv2.findContours(edged, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    # cv2.imwrite('edged.jpg', edged)
+    contours, _ = cv2.findContours(edged, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     c = max(contours, key=cv2.contourArea)
     x, y, w, h = cv2.boundingRect(c)
 
     cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
-    cv2.imwrite('processed_image.jpg', image)
+    cv2.imwrite('UPLOAD_FOLDER/processed_image.jpg', image)
 
 
 def auto_canny(image, sigma=0.3):
